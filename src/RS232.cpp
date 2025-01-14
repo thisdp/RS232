@@ -13,7 +13,7 @@ void RS232::begin(size_t baud, uint32_t config, int8_t rxPin, int8_t txPin, int8
 	((HardwareSerial*) this)->setTx(txPin);
 	((HardwareSerial*) this)->begin(baud,config);
 #endif
-  timeoutTime = timeout;
+	timeoutTime = timeout;
 	if(pinDSR != -1){
 		pinMode(pinDSR,INPUT_PULLUP);
 	}
@@ -32,21 +32,21 @@ void RS232::setTimedOut(uint32_t timeout){
 }
 
 void RS232::setDataTerminalReady(bool state){
-  if(pinDTR != -1) digitalWrite(pinDTR,!state);
+	if(pinDTR != -1) digitalWrite(pinDTR,!state);
 }
 
 bool RS232::isDataSetReady(){
-  if(pinDSR == -1) return true;
-  return !digitalRead(pinDSR);
+	if(pinDSR == -1) return true;
+	return !digitalRead(pinDSR);
 }
 
 bool RS232::send(uint8_t *data,uint16_t length){
 	if(beginTransmission()){
-    write(data,length);
-    endTransmission();
-    return true;
-  }
-  return false;
+		write(data,length);
+		endTransmission();
+		return true;
+	}
+	return false;
 }
 
 size_t RS232::write(uint8_t c){
@@ -60,16 +60,16 @@ size_t RS232::write(const uint8_t *buffer, size_t size){
 }
 
 bool RS232::beginTransmission(){
-  setDataTerminalReady(true);
-  timeoutStart = millis();
-  while(1){
-    if(isDataSetReady()){
-      return true;
-    }else if(millis()-timeoutStart >= timeoutTime){ //if timed out
-      endTransmission();
-      return false;
-    }
-  }
+	setDataTerminalReady(true);
+	timeoutStart = millis();
+	while(1){
+		if(isDataSetReady()){
+			return true;
+		}else if(millis()-timeoutStart >= timeoutTime){ //if timed out
+			endTransmission();
+			return false;
+		}
+	}
 }
 
 void RS232::endTransmission(){
@@ -78,5 +78,5 @@ void RS232::endTransmission(){
 #else
 	flush();
 #endif
-  setDataTerminalReady(false);
+	setDataTerminalReady(false);
 }
